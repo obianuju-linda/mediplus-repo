@@ -47,6 +47,8 @@ jobs:
           chmod 600 Dockerhost.pem
 
           ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker ps"
-    
+          ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker pull 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:v1"
           ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "hostnamectl"
+          ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker run -d -p 80:80 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:v1"
+    
       

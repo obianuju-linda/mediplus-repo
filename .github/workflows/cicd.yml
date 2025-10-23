@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@{{ github.run_number }}  # Checkout the code in your repository.
+      uses: actions/checkout@v1  # Checkout the code in your repository.
 
     - name: Configure AWS credentials
       run:  

@@ -41,5 +41,17 @@ jobs:
 
         # Push the image to ECR.
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+deploy: 
+  run-on: ubuntu-latest
+  needs: build-push
+  steps:
+    - name: check my ssh key
+      run: |
+        echo "${{ secrets.SSH_KEY }}" > Dockerhost.pem
+        chmod 600 Dockerhost.pem
+        cat Dockerhost.pem
+    
+      
     
       

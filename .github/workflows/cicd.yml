@@ -6,7 +6,7 @@ on:
       - main # This will trigger the pipeline when changes are pushed to the main branch.
 
 jobs:
-  # build-push:
+   build-push:
   #   runs-on: ubuntu-latest
 
   #   steps:
@@ -46,7 +46,6 @@ jobs:
         run: |
           echo "${{ secrets.SSH_KEY }}" > Dockerhost.pem
           chmod 600 Dockerhost.pem
-          cat Dockerhost.pem 
 
           ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker ps"
     

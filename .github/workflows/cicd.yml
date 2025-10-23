@@ -27,7 +27,7 @@ jobs:
     - name: Build and push Docker image to ECR
       run: |
         # Define variables
-        IMAGE_TAG=${{ github.run_id }}
+        IMAGE_TAG=${{ github.run_number }}
         ECR_REGISTRY=242201301803.dkr.ecr.us-east-1.amazonaws.com
         ECR_REPOSITORY=mediplus-repo
 
@@ -47,7 +47,8 @@ jobs:
         chmod 600 Dockerhost.pem
 
         ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker ps"
-        ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker pull 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:latest"
+        ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker pull 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:$IMAGE_TAG"
         ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "hostnamectl"
+        ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker rm -f mediplus-repo"
         # Corrected the trailing double-quote here
-        ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker run -d -p 80:80 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:latest"
+        ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ubuntu@3.94.110.160 "docker run -d -p 80:80 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:$IMAGE_TAG"

@@ -6,35 +6,22 @@ on:
       - main # This will trigger the pipeline when changes are pushed to the main branch.
 
 jobs:
-  build-push:
-    runs-on: ubuntu-latest
+  #  - name: Checkout code
+  #    uses: actions/checkout@v4
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+  #      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+     #   aws-region: us-east-1
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+   # - name: Login to AWS ECR
+     # run: |
+      #  aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201301803.dkr.ecr.us-east-1.amazonaws.com
 
-    - name: Login to AWS ECR
-      run: |
-        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201301803.dkr.ecr.us-east-1.amazonaws.com
-
-    - name: Build and push Docker image to ECR
-      run: |
-        # Define variables
-        IMAGE_TAG=${{ github.run_id }}
-        ECR_REGISTRY=242201301803.dkr.ecr.us-east-1.amazonaws.com
-        ECR_REPOSITORY=mediplus-repo
-
-        # Build, Tag, and Push
-        docker build -t $ECR_REPOSITORY .
-        docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    #- name: Build and push Docker image to ECR
+    #run: |
+       # Build, Tag, and Push
+      #  docker build -t $ECR_REPOSITORY .
+      #  docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
+      #  docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
   deploy:
     runs-on: ubuntu-latest 

@@ -3,31 +3,43 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # This will trigger the pipeline when changes are pushed to the main branch.
+      - main # This will trigger the pipeline when changes are pushed to the main branch.
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Runs the workflow on the latest Ubuntu runner.
+    runs-on: ubuntu-latest # Runs the workflow on the latest Ubuntu runner.
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v1  # Checkout the code in your repository.
+      uses: actions/checkout@v4 # Use the latest stable version of the checkout action.
 
     - name: Configure AWS credentials
-      run:  
-        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws configure set default.region us-east-1  # Specify your AWS region.
+      uses: aws-actions/configure-aws-credentials@v4 # Use the official action for secure and simpler AWS authentication.
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 # Specify your AWS region.
 
     - name: Login to AWS ECR
+      # This step is often redundant if you use the 'aws-actions/amazon-ecr-login@v2' action, 
+      # but it's kept here as a direct AWS CLI command for reference.
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201301803.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Build and push Docker image to ECR
       run: |
-        docker build -t mediplus-repo .  # Build the Docker image with the tag 'mediplus-repo'.
-        docker tag mediplus-repo:v1 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:v1  # Tag the image for ECR.
-        docker push 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:v1  # Push the image to ECR.    
-        
+        # Define a dynamic tag for better versioning (e.g., using the run ID or commit SHA)
+        IMAGE_TAG=${{ github.run_id }}
+        ECR_REGISTRY=242201301803.dkr.ecr.us-east-1.amazonaws.com
+        ECR_REPOSITORY=mediplus-repo
+
+        # Build the Docker image. 'mediplus-repo' is the name of the image.
+        docker build -t $ECR_REPOSITORY .
+
+        # Tag the image for ECR. Use the defined variables.
+        docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
+
+        # Push the image to ECR.
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
     
       

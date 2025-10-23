@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline 🚀
 
 on:
   push:
@@ -6,51 +6,50 @@ on:
       - main # This will trigger the pipeline when changes are pushed to the main branch.
 
 jobs:
-  build:
-    runs-on: ubuntu-latest # Runs the workflow on the latest Ubuntu runner.
+  build-push:
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4 # Use the latest stable version of the checkout action.
+      uses: actions/checkout@v4
 
     - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4 # Use the official action for secure and simpler AWS authentication.
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1 # Specify your AWS region.
+        aws-region: us-east-1
 
     - name: Login to AWS ECR
-      # This step is often redundant if you use the 'aws-actions/amazon-ecr-login@v2' action, 
-      # but it's kept here as a direct AWS CLI command for reference.
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201301803.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Build and push Docker image to ECR
       run: |
-        # Define a dynamic tag for better versioning (e.g., using the run ID or commit SHA)
+        # Define variables
         IMAGE_TAG=${{ github.run_id }}
         ECR_REGISTRY=242201301803.dkr.ecr.us-east-1.amazonaws.com
         ECR_REPOSITORY=mediplus-repo
 
-        # Build the Docker image. 'mediplus-repo' is the name of the image.
+        # Build, Tag, and Push
         docker build -t $ECR_REPOSITORY .
-
-        # Tag the image for ECR. Use the defined variables.
         docker tag $ECR_REPOSITORY:latest $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG 
-
-        # Push the image to ECR.
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-deploy: 
-  run-on: ubuntu-latest
-  needs: build-push
-  steps:
-    - name: check my ssh key
-      run: |
-        echo "${{ secrets.SSH_KEY }}" > Dockerhost.pem
-        chmod 600 Dockerhost.pem
-        cat Dockerhost.pem
+---
+
+  deploy:
+    runs-on: ubuntu-latest 
+    needs: build-push  
+    
+    steps:
+      - name: check my ssh key (Temporary Test)
+        run: |
+          # DANGER: This exposes the private key in plaintext in the workflow logs. 
+          # Use this ONLY for temporary testing and remove it immediately afterward.
+          echo "${{ secrets.SSH_KEY }}" > Dockerhost.pem
+          chmod 600 Dockerhost.pem
+          cat Dockerhost.pem
     
       
     

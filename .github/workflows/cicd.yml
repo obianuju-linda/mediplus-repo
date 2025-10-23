@@ -50,7 +50,7 @@ jobs:
           echo "${{ secrets.SSH_KEY }}" > Dockerhost.pem
           chmod 600 Dockerhost.pem
           cat Dockerhost.pem 
+          ssh -o StrictHostKeyChecking=no -i Dockerhost.pem ./deploy.sh ubuntu@3.94.110.160 "docker ps"
     
-      
-    
+        
       

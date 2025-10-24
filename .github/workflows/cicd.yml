@@ -33,7 +33,7 @@ jobs:
 
         # Build, Tag, and Push
         docker build -t $ECR_REPOSITORY .
-        docker tag $ECR_REPOSITORY:${{ github.run_number }} $ECR_REGISTRY/$ECR_REPOSITORY: ${{ github.run_number }}
+        docker tag mediplus:${{ github.run_number }} $ECR_REGISTRY/$ECR_REPOSITORY: ${{ github.run_number }}
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_number }}
 
   deploy:

@@ -25,11 +25,7 @@ jobs:
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 242201301803.dkr.ecr.us-east-1.amazonaws.com
 
     - name: Build and push Docker image to ECR
-      run: |
-        # Define variables
-        IMAGE_TAG=${{ github.run_number }}
-        ECR_REGISTRY=242201301803.dkr.ecr.us-east-1.amazonaws.com
-        ECR_REPOSITORY=mediplus-repo
+      run: 
 
         # Build, Tag, and Push
         docker build -t mediplus-repo .

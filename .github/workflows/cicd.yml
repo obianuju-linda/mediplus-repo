@@ -32,9 +32,9 @@ jobs:
         ECR_REPOSITORY=mediplus-repo
 
         # Build, Tag, and Push
-        docker build -t $ECR_REPOSITORY .
-        docker tag mediplus:${{ github.run_number }} $ECR_REGISTRY/$ECR_REPOSITORY: ${{ github.run_number }}
-        docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ github.run_number }}
+        docker build -t mediplus-repo .
+        docker tag mediplus-repo:${{ github.run_number }} 242201301803.dkr.ecr.us-east-1.amazonaws.com/meddiplus-repo: ${{ github.run_number }}
+        docker push 242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo:${{ github.run_number }}
 
   deploy:
     runs-on: ubuntu-latest 

@@ -10,6 +10,6 @@ WORKDIR /usr/share/nginx/html
 COPY . /usr/share/nginx/html
 
 # Expose port 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]

@@ -47,7 +47,7 @@ jobs:
       run: |
         # Setup variables
         SSH_USER=ubuntu
-        SSH_HOST=34.203.248.57
+        SSH_HOST=98.81.137.114
         ECR_REPO_URL=242201301803.dkr.ecr.us-east-1.amazonaws.com/mediplus-repo
         IMAGE_TAG=${{ github.run_number }}
         SSH_CMD="ssh -o StrictHostKeyChecking=no -i Dockerhost.pem $SSH_USER@$SSH_HOST"
